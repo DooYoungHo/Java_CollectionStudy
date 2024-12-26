@@ -66,10 +66,25 @@ public class SampleArrayList {
         current++;
         return true;
     }
-//
-//    public void addAll(int index, Object[] data) {
-//
-//    }
+
+    public void addAll(int index, Object[] data) {
+        if (index > current || index < 0) {
+            throw new IllegalArgumentException("Index is out of bounds");
+        }
+
+        if (Objects.isNull(data)) {
+            throw new IllegalArgumentException("Object cannot be null");
+        }
+
+        if (current + data.length > arrays.length) {
+            int newCapacity = Math.max(arrays.length * 2, current + data.length);
+            arrays = Arrays.copyOf(arrays, newCapacity);
+        }
+
+        System.arraycopy(arrays, index, arrays, index + data.length, current - index);
+        System.arraycopy(data, 0, arrays, index, data.length);
+        current += data.length;
+    }
 
     public void remove() {
         if (isEmpty()) {
@@ -95,10 +110,33 @@ public class SampleArrayList {
 
         arrays[--current] = null;
     }
-//
-//    public boolean removeAll(Object[] data) {
-//        return false;
-//    }
+
+    public boolean removeAll(Object[] data) {
+        if (isEmpty()) {
+            throw new IndexOutOfBoundsException("List is Empty");
+        }
+
+        if (Objects.isNull(data)) {
+            throw new IllegalArgumentException("Input array cannot be null");
+        }
+
+        boolean removedAtLeastOne = false;
+
+        for (Object object : data) {
+            if (Objects.nonNull(object)) {
+                try {
+                    boolean removed = remove(object);
+                    if (removed) {
+                        removedAtLeastOne = true;
+                    }
+                } catch (IllegalArgumentException e) {
+                    //
+                }
+            }
+        }
+
+        return removedAtLeastOne;
+    }
 
     public boolean remove(Object object) {
         if (isEmpty()) {
@@ -215,6 +253,12 @@ public class SampleArrayList {
         System.out.println("요소 값 삭제 : " + list.remove("test"));
         list.clear();
         System.out.println("현재 리스트의 사이즈 : " + list.size());
+        list.add("1");
+        list.add("2");
+        list.add("3");
+        list.addAll(3, new Object[]{"p1", "p2", "p3"});
+        System.out.println("현재 리스트의 값 : " + Arrays.toString(list.arrays));
+        list.removeAll(new Object[]{"p1", "p2", "p3"});
+        System.out.println("현재 리스트의 값 : " + Arrays.toString(list.arrays));
     }
-
 }
