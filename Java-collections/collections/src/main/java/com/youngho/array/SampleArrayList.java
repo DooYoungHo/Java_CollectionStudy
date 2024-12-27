@@ -237,7 +237,7 @@ public class SampleArrayList<E> implements SampleList<E> {
     }
 
     public static void main(String[] args) {
-        SampleArrayList<Object> list = new SampleArrayList<>();
+        SampleArrayList<Integer> list = new SampleArrayList<>();
 
         System.out.println("현재 리스트의 사이즈 : " + list.size());
         list.add(1);
@@ -261,18 +261,5 @@ public class SampleArrayList<E> implements SampleList<E> {
         System.out.println("값 포함여부 : " + list.contains(5));
         System.out.println("값 포함여부 : " + list.contains(6));
         System.out.println("요소의 값 가져오기 : " + list.get(0));
-        list.add("test");
-        System.out.println("값의 인덱스 : " + list.indexOf("test"));
-        System.out.println("sub Array : " + Arrays.toString(list.subArray(0, 2)));
-        System.out.println("요소 값 삭제 : " + list.remove("test"));
-        list.clear();
-        System.out.println("현재 리스트의 사이즈 : " + list.size());
-        list.add("1");
-        list.add("2");
-        list.add("3");
-        list.addAll(3, new Object[]{"p1", "p2", "p3"});
-        System.out.println("현재 리스트의 값 : " + Arrays.toString(list.arrays));
-        list.removeAll(new Object[]{"p1", "p2", "p3"});
-        System.out.println("현재 리스트의 값 : " + Arrays.toString(list.arrays));
     }
 }
