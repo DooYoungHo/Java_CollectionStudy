@@ -6,7 +6,7 @@ import java.util.Objects;
 /**
  * 배열로 arrayList 구현하기
  */
-public class SampleArrayList {
+public class SampleArrayList<E> implements SampleList<E> {
 
     /**
      * ArrayList 특징
@@ -20,22 +20,34 @@ public class SampleArrayList {
      */
 
     private int current = 0;
+    private int size = 0;
     private final static int DEFAULT_SIZE = 5;
-    private Object[] arrays;
+    private E[] arrays;
 
+    // 제네릭 배열을 생성할 수 없기 때문에 Object 배열을 생성하고 형변환을 해줌
+    @SuppressWarnings("unchecked")
     public SampleArrayList() {
-        arrays = new Object[DEFAULT_SIZE];
+        this.arrays = (E[]) new Object[DEFAULT_SIZE];
     }
 
+    // 마찬가지로 형변환 때문
+    @SuppressWarnings("unchecked")
     public SampleArrayList(final int size) {
-        arrays = new Object[size];
+        if (size == 0) {
+            this.arrays = (E[]) new Object[DEFAULT_SIZE];
+        } else if (size > 0){
+            this.size = size;
+            this.arrays = (E[]) new Object[this.size];
+        } else {
+            throw new IllegalArgumentException("Size must be greater than 0");
+        }
     }
 
-    private boolean isFull() {
+    public boolean isFull() {
         return current == arrays.length;
     }
 
-    public boolean add(Object object) {
+    public boolean add(E object) {
 
         if (isFull()) {
             arrays = Arrays.copyOf(arrays, arrays.length + DEFAULT_SIZE);
@@ -46,7 +58,7 @@ public class SampleArrayList {
 
     }
 
-    public boolean add(int index, Object object) {
+    public boolean add(int index, E object) {
         if (index > current || index < 0) {
             throw new IndexOutOfBoundsException("Index is out of bounds");
         }
@@ -67,7 +79,7 @@ public class SampleArrayList {
         return true;
     }
 
-    public void addAll(int index, Object[] data) {
+    public void addAll(int index, E[] data) {
         if (index > current || index < 0) {
             throw new IllegalArgumentException("Index is out of bounds");
         }
@@ -86,7 +98,7 @@ public class SampleArrayList {
         current += data.length;
     }
 
-    public void remove() {
+    public E remove() {
         if (isEmpty()) {
             throw new IndexOutOfBoundsException("List is Empty");
         }
@@ -96,10 +108,10 @@ public class SampleArrayList {
             throw new IndexOutOfBoundsException("List is Empty");
         }
 
-        arrays[-- current] = null;
+        return arrays[--current];
     }
 
-    public void remove(int index) {
+    public E remove(int index) {
         if (isEmpty()) {
             throw new IndexOutOfBoundsException("List is Empty");
         }
@@ -108,10 +120,13 @@ public class SampleArrayList {
             arrays[i] = arrays[i + 1];
         }
 
-        arrays[--current] = null;
+        E oldValue = arrays[--current];
+        arrays[current] = null;
+
+        return oldValue;
     }
 
-    public boolean removeAll(Object[] data) {
+    public void removeAll(E[] data) {
         if (isEmpty()) {
             throw new IndexOutOfBoundsException("List is Empty");
         }
@@ -120,25 +135,18 @@ public class SampleArrayList {
             throw new IllegalArgumentException("Input array cannot be null");
         }
 
-        boolean removedAtLeastOne = false;
-
-        for (Object object : data) {
+        for (E object : data) {
             if (Objects.nonNull(object)) {
                 try {
-                    boolean removed = remove(object);
-                    if (removed) {
-                        removedAtLeastOne = true;
-                    }
+                    remove(object);
                 } catch (IllegalArgumentException e) {
                     //
                 }
             }
         }
-
-        return removedAtLeastOne;
     }
 
-    public boolean remove(Object object) {
+    public boolean remove(E object) {
         if (isEmpty()) {
             throw new IndexOutOfBoundsException("List is Empty");
         }
@@ -159,9 +167,15 @@ public class SampleArrayList {
         throw new IllegalArgumentException("This Object doesn't exists");
     }
 
+    // 마찬가지 배열을 비워주고 새로 생성하기 때문
+    @SuppressWarnings("unchecked")
     public void clear() {
-        arrays = new Object[DEFAULT_SIZE];
-        current = 0;
+        if (this.size > 0) {
+            this.arrays = (E[]) new Object[this.size];
+        } else {
+            this.arrays = (E[]) new Object[DEFAULT_SIZE];
+            current = 0;
+        }
     }
 
     public boolean isEmpty() {
@@ -185,7 +199,7 @@ public class SampleArrayList {
         return false;
     }
 
-    public int indexOf(Object object) {
+    public int indexOf(E object) {
         if (Objects.isNull(object)) {
             throw new IllegalArgumentException("This data is Invalid data");
         }
@@ -199,14 +213,14 @@ public class SampleArrayList {
         return -1;
     }
 
-    public Object get(int index) {
+    public E get(int index) {
         if (index < 0 || index >= current) {
             throw new IllegalArgumentException("Index Out of Bounds");
         }
-        return arrays[index];
+        return (E) arrays[index];
     }
 
-    public Object[] subArray(int fromIndex, int toIndex) {
+    public E[] subArray(int fromIndex, int toIndex) {
         if (fromIndex > toIndex) {
             throw new IndexOutOfBoundsException("Start Index Invalid");
         }
@@ -223,7 +237,7 @@ public class SampleArrayList {
     }
 
     public static void main(String[] args) {
-        SampleArrayList list = new SampleArrayList();
+        SampleArrayList<Object> list = new SampleArrayList<>();
 
         System.out.println("현재 리스트의 사이즈 : " + list.size());
         list.add(1);
