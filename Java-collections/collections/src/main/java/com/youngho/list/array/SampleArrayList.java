@@ -1,4 +1,4 @@
-package com.youngho.array;
+package com.youngho.list.array;
 
 import java.util.Arrays;
 import java.util.Objects;

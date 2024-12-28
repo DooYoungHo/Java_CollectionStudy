@@ -1,4 +1,4 @@
-package com.youngho.array;
+package com.youngho.list.array;
 
 public interface SampleList<T> {
 
