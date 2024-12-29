@@ -9,3 +9,6 @@
 ## SampleSingleLinkedList
 - 간단한 Node로 singly LinkedList 구현
 - 많이 쓰이지 않으므로 add, remove, get 정도 구현
+
+## SampleDoublyLinkedList
+- prev, next를 이용하여 Doubly LinkedList 구현
